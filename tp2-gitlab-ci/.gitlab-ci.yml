@@ -1,0 +1,13 @@
+stages:
+  - test
+
+check-secrets-job:
+  stage: test
+  script:
+    - echo "===================="
+    - echo "TP2 - Test des Secrets"
+    - echo "===================="
+    - echo "Tentative d'affichage du mot de passe :"
+    - echo $DB_PASSWORD
+    - echo ""
+    - echo "Connexion à la BDD réussie !"

@@ -1,0 +1,42 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  # Définit l'image avec le SHA complet (ex: gitlab.karib.com:5050/mon-groupe/mon-projet:a1b2c3d4...)
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  IMAGE_LATEST: $CI_REGISTRY_IMAGE:latest
+
+build-and-push:
+  stage: build
+  image: docker:24.0.5
+  script:
+    - echo "Connexion au registre GitLab local..."
+    - echo "$CI_JOB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - echo "Build de l'image avec le SHA du commit..."
+    - docker build -t $IMAGE_TAG -t $IMAGE_LATEST .
+    - echo "Push des images vers le registre..."
+    - docker push $IMAGE_TAG
+    - docker push $IMAGE_LATEST
+
+deploy-to-remote:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client
+    - eval $(ssh-agent -s)
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script:
+    - echo "Déploiement du commit $CI_COMMIT_SHORT_SHA vers $DEPLOY_SERVER_IP..."
+    - |
+      ssh ${DEPLOY_USER}@${DEPLOY_SERVER_IP} "
+        echo '$CI_JOB_TOKEN' | docker login -u '$CI_REGISTRY_USER' --password-stdin $CI_REGISTRY && \
+        docker pull $IMAGE_TAG && \
+        docker stop ma-super-app || true && \
+        docker rm ma-super-app || true && \
+        docker run -d --name ma-super-app $IMAGE_TAG
+      "

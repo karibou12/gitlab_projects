@@ -1,0 +1,30 @@
+stages:
+  - build
+  - test
+
+# Job 1 : Construction de l'image Docker
+build-docker-image:
+  stage: build
+  image: docker:24.0.5
+  services:
+    - name: docker:24.0.5-dind
+      alias : docker
+  script:
+    - echo "=============================="
+    - echo "Construction de l'image Docker"
+    - echo "=============================="
+    - docker build -t ma-super-app:latest .
+    - echo "Image construite avec succes !"
+
+# Job 2 : Vérification que l'image et l'app fonctionnent
+test-docker-image:
+  stage: test
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - echo "=============================="
+    - echo "Verification de l'image"
+    - echo "=============================="
+    - docker build -t ma-super-app:latest .
+    - docker run --rm ma-super-app:latest
