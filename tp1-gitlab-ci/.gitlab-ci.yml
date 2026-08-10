@@ -1,0 +1,24 @@
+stages:
+  - test
+
+tp1:
+  stage: test
+  tags:
+    - docker
+
+  script:
+    - echo "===================="
+    - echo "TP1 GitLab CI"
+    - echo "===================="
+    - echo "Bonjour depuis GitLab !"
+    - echo "Date :$(date)"
+    - echo "Branche :$CI_COMMIT_BRANCH"
+    - echo "Commit :$CI_COMMIT_SHA"
+    - echo "Auteur :$GITLAB_USER_LOGIN"
+    - echo $CI_PROJECT_NAME
+    - echo "Pipeline terminé !"
+
+  rules:
+      - if: '$CI_COMMIT_BRANCH == "main"'
+        when: always
+      - when: never
