@@ -10,8 +10,7 @@ app.config['SECRET_KEY'] = 'your_secret_key'
 
 #### replace credential here the movie database API key
 tmdbCredential = {
-            "accept": "application/json",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmM2I1NGViM2Q0ZTQyODVkZGUxODFmNGVjMzNjM2RmMyIsInN1YiI6IjY1OTAxMDc0NjRmNzE2NjVkNjhlYThiZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DGoyIxj4tfOLEbFjyFNZIUoKSLMPdNJGzyV4FpJtIGY"
+            "accept": "application/json",BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DGoyIxj4tfOLEbFjyFNZIUoKSLMPdNJGzyV4FpJtIGY"
         }
 
 
