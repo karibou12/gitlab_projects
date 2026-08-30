@@ -1,0 +1,46 @@
+services:
+
+  frontend:
+    image: ${CI_REGISTRY_IMAGE:-library}/frontend:${IMAGE_TAG:-0.1}
+
+    build:
+      context: .
+      dockerfile: ./dockerfile_frontend
+
+    environment:
+      API_URL: ${API_URL:-http://backend:5000}
+
+    # networks:
+    #   mynetwork:
+    #     ipv4_address: 172.22.0.2
+
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      - backend
+
+
+  backend:
+    image: ${CI_REGISTRY_IMAGE:-library}/backend:${IMAGE_TAG:-0.1}
+
+    build:
+      context: .
+      dockerfile: ./dockerfile_backend
+
+    # networks:
+    #   mynetwork:
+    #     ipv4_address: 172.22.0.3
+
+    ports:
+      - "5001:5000"
+
+    volumes:
+      - ./bdd:/app/bdd
+
+networks:
+  mynetwork:
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+          gateway: 172.22.0.1
