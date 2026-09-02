@@ -30,6 +30,7 @@ build:
     - docker push "$CI_REGISTRY_IMAGE/backend:$IMAGE_TAG"
     - docker push "$CI_REGISTRY_IMAGE/backend:latest"
 
+
 # ------------------------------------------------------------------
 # STAGE 2 : DÉPLOIEMENT SSH SUR SERVEUR DISTANT
 # ------------------------------------------------------------------
